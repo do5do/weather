@@ -1,0 +1,9 @@
+###
+POST http://localhost:8080/diaries
+Content-Type: application/json
+
+{
+  "date": "2023-10-18",
+  "text": "today diary",
+  "city": ""
+}

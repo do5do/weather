@@ -25,8 +25,10 @@ public class DiaryController {
     }
 
     @GetMapping("/diaries")
-    public ResponseEntity<List<DiaryDto>> getDiary(
+    public ResponseEntity<List<DiaryDto>> getDiaries(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return ResponseEntity.ok(diaryService.getDiaryByDate(date));
+        return ResponseEntity.ok(diaryService.getDiariesByDate(date));
     }
+
+    // todo update, delete
 }

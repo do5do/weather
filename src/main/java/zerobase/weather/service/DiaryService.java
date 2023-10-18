@@ -1,6 +1,5 @@
 package zerobase.weather.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -8,18 +7,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import zerobase.weather.domain.Diary;
 import zerobase.weather.dto.DiaryDto;
 import zerobase.weather.dto.WeatherApiResponse;
+import zerobase.weather.exception.ApiBadRequestException;
+import zerobase.weather.exception.ErrorCode;
 import zerobase.weather.repository.DiaryRepository;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+@Transactional(readOnly = true)
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -31,6 +35,7 @@ public class DiaryService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
 
+    @Transactional
     public DiaryDto createDiary(LocalDate date, String text, String city) {
         WeatherApiResponse weatherApiResponse = getWeather(city);
         return DiaryDto.fromEntity(diaryRepository.save(Diary.of(
@@ -54,13 +59,13 @@ public class DiaryService {
 
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             return objectMapper.readValue(response.getBody(), WeatherApiResponse.class);
-        } catch (JsonProcessingException | RestClientException e) {
-            log.error("error occurred ", e);
-            throw new RuntimeException("예외처리 필요 (올바르지 않은 요청)");
+        } catch (HttpClientErrorException | IOException e) {
+            log.error("API HttpClientErrorException is occurred. ", e);
+            throw new ApiBadRequestException(ErrorCode.INVALID_REQUEST);
         }
     }
 
-    public List<DiaryDto> getDiaryByDate(LocalDate date) {
+    public List<DiaryDto> getDiariesByDate(LocalDate date) {
         return diaryRepository.findAllByDate(date).stream()
                 .map(DiaryDto::fromEntity)
                 .toList();
