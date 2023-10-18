@@ -13,7 +13,6 @@ import zerobase.weather.dto.DiaryDto;
 import zerobase.weather.service.DiaryService;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -46,12 +45,12 @@ class DiaryControllerTest {
         // when
         // then
         mockMvc.perform(post("/diaries")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(
-                        new CreateDiary.Request(
-                                LocalDate.now(), "today's diary",
-                                "busan")
-                )))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new CreateDiary.Request(
+                                        LocalDate.now(), "today's diary",
+                                        "busan")
+                        )))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andDo(print());
