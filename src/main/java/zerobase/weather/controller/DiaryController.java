@@ -5,7 +5,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import zerobase.weather.dto.CreateDiary;
+import zerobase.weather.dto.DeleteDiaryResponse;
 import zerobase.weather.dto.DiaryDto;
+import zerobase.weather.dto.UpdateDiary;
 import zerobase.weather.service.DiaryService;
 
 import java.time.LocalDate;
@@ -26,9 +28,22 @@ public class DiaryController {
 
     @GetMapping("/diaries")
     public ResponseEntity<List<DiaryDto>> getDiaries(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ResponseEntity.ok(diaryService.getDiariesByDate(date));
     }
 
-    // todo update, delete
+    @PatchMapping("/diaries")
+    public ResponseEntity<UpdateDiary.Response> updateDiary(
+            @RequestBody UpdateDiary.Request request) {
+        return ResponseEntity.ok(UpdateDiary.Response.from(
+                diaryService.updateDiary(request.getId(), request.getText())
+        ));
+    }
+
+    @DeleteMapping("/diaries/{id}")
+    public ResponseEntity<DeleteDiaryResponse> deleteDiary(@PathVariable Long id) {
+        return ResponseEntity.ok(DeleteDiaryResponse.from(
+                diaryService.deleteDiary(id)));
+    }
 }

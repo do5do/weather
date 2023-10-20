@@ -27,7 +27,8 @@ public class Diary extends BaseTimeEntity {
     private LocalDate date;
 
     @Builder
-    public Diary(String weather, String icon, Double temperature, String text, LocalDate date) {
+    public Diary(Long id, String weather, String icon, Double temperature, String text, LocalDate date) {
+        this.id = id;
         this.weather = weather;
         this.icon = icon;
         this.temperature = temperature;
@@ -43,5 +44,9 @@ public class Diary extends BaseTimeEntity {
                 .text(text)
                 .date(date)
                 .build();
+    }
+
+    public void updateDiary(String text) {
+        this.text = text;
     }
 }

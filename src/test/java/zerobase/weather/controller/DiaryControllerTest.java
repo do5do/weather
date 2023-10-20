@@ -10,16 +10,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import zerobase.weather.dto.CreateDiary;
 import zerobase.weather.dto.DiaryDto;
+import zerobase.weather.dto.UpdateDiary;
 import zerobase.weather.service.DiaryService;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,7 +56,7 @@ class DiaryControllerTest {
     }
 
     @Test
-    @DisplayName("날짜로 다이어리 조회")
+    @DisplayName("해당 날짜의 일기 조회")
     void getDiaries() throws Exception {
         // given
         List<DiaryDto> diaryDtos = List.of(diaryDto(), diaryDto());
@@ -68,8 +67,45 @@ class DiaryControllerTest {
         // when
         // then
         mockMvc.perform(get("/diaries?date=2023-10-18"))
-                .andExpect(jsonPath("$[0].date").value("2023-10-18"))
-                .andExpect(jsonPath("$[1].date").value("2023-10-18"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].date")
+                        .value("2023-10-18"))
+                .andExpect(jsonPath("$[1].date")
+                        .value("2023-10-18"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("일기 수정")
+    void updateDiary() throws Exception {
+        // given
+        given(diaryService.updateDiary(anyLong(), anyString()))
+                .willReturn(diaryDto());
+
+        // when
+        // then
+        mockMvc.perform(patch("/diaries")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new UpdateDiary.Request(1L, "일기 수정")
+                        )))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("일기 삭제")
+    void deleteDiary() throws Exception {
+        // given
+        given(diaryService.deleteDiary(anyLong()))
+                .willReturn(diaryDto());
+
+        // when
+        // then
+        mockMvc.perform(delete("/diaries/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
                 .andDo(print());
     }
 

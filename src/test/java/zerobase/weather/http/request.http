@@ -1,9 +1,21 @@
-###
+### create diary
 POST http://localhost:8080/diaries
 Content-Type: application/json
 
 {
   "date": "2023-10-18",
   "text": "today diary",
-  "city": ""
+  "city": "busan"
+}
+
+### get diaries
+GET http://localhost:8080/diaries?date=2023-10-18
+
+### update diary
+PATCH http://localhost:8080/diaries
+Content-Type: application/json
+
+{
+"id": 1,
+"text": "update diary"
 }
