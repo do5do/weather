@@ -59,7 +59,15 @@ class DiaryControllerTest {
     @DisplayName("해당 날짜의 일기 조회")
     void getDiaries() throws Exception {
         // given
-        List<DiaryDto> diaryDtos = List.of(diaryDto(), diaryDto());
+        DiaryDto diaryDto = DiaryDto.builder()
+                .id(1L)
+                .weather("Clear")
+                .temperature(293.14)
+                .text("오늘 날씨 일기")
+                .date(LocalDate.parse("2023-10-18"))
+                .build();
+
+        List<DiaryDto> diaryDtos = List.of(diaryDto, diaryDto);
 
         given(diaryService.getDiariesByDate(any()))
                 .willReturn(diaryDtos);
