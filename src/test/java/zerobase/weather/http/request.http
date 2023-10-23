@@ -16,3 +16,6 @@ Content-Type: application/text
 {
   "update diary"
 }
+
+### delete diary
+DELETE http://localhost:8080/delete/diary?date=2023-10-18
