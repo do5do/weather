@@ -1,3 +1,16 @@
+POST http://localhost:8080/create/diary?date=2023-10-18
+Content-Type: application/text
+Content-Length: 19
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "today diary"
+}
+
+###
+
 GET http://localhost:8080/read/diary?date=2023-10-18
 Connection: Keep-Alive
 User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
