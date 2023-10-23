@@ -2,12 +2,8 @@ package zerobase.weather.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import zerobase.weather.dto.CreateDiary;
-import zerobase.weather.dto.DeleteDiaryResponse;
 import zerobase.weather.dto.DiaryDto;
-import zerobase.weather.dto.UpdateDiary;
 import zerobase.weather.service.DiaryService;
 
 import java.time.LocalDate;
@@ -18,32 +14,42 @@ import java.util.List;
 public class DiaryController {
     private final DiaryService diaryService;
 
-    @PostMapping("/diaries")
-    public ResponseEntity<CreateDiary.Response> createDiary(
-            @RequestBody CreateDiary.Request request) {
-        return ResponseEntity.ok(CreateDiary.Response.from(
-                diaryService.createDiary(request.getDate(),
-                        request.getText(), request.getCity())));
+    @PostMapping("/create/diary")
+    public void createDiary(
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestBody String text) {
+        diaryService.createDiary(date, text);
     }
 
-    @GetMapping("/diaries")
-    public ResponseEntity<List<DiaryDto>> getDiaries(
+    @GetMapping("/read/diary")
+    public List<DiaryDto> getDiaries(
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return ResponseEntity.ok(diaryService.getDiariesByDate(date));
+        return diaryService.getDiaries(date);
     }
 
-    @PatchMapping("/diaries")
-    public ResponseEntity<UpdateDiary.Response> updateDiary(
-            @RequestBody UpdateDiary.Request request) {
-        return ResponseEntity.ok(UpdateDiary.Response.from(
-                diaryService.updateDiary(request.getId(), request.getText())
-        ));
+    @GetMapping("/read/diaries")
+    public List<DiaryDto> getDiariesBetween(
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        return diaryService.getDiariesBetween(startDate, endDate);
     }
 
-    @DeleteMapping("/diaries/{id}")
-    public ResponseEntity<DeleteDiaryResponse> deleteDiary(@PathVariable Long id) {
-        return ResponseEntity.ok(DeleteDiaryResponse.from(
-                diaryService.deleteDiary(id)));
+    @PutMapping("/update/diary")
+    public void updateDiary(
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestBody String text) {
+        diaryService.updateDiary(date, text);
+    }
+
+    @DeleteMapping("/delete/diary")
+    public void deleteDiary(
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        diaryService.deleteDiary(date);
     }
 }

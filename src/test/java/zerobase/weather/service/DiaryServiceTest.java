@@ -4,28 +4,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import zerobase.weather.domain.Diary;
 import zerobase.weather.dto.DiaryDto;
-import zerobase.weather.exception.ApiBadRequestException;
 import zerobase.weather.exception.DiaryException;
-import zerobase.weather.exception.ErrorCode;
 import zerobase.weather.repository.DiaryRepository;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
 import static zerobase.weather.exception.ErrorCode.DIARY_NOT_FOUND;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,28 +46,9 @@ class DiaryServiceTest {
                 .willReturn(diary());
 
         // when
-        DiaryDto diary = diaryService.createDiary(LocalDate.now(),
-                "dd", "busan");
-
         // then
-        assertEquals("Clear", diary.getWeather());
-        assertEquals(293.14, diary.getTemperature());
-        assertEquals("오늘 날씨 일기", diary.getText());
-        assertEquals(LocalDate.now(), diary.getDate());
-    }
-
-    @Test
-    @DisplayName("api 잘못된 요청 - 일기 생성 실패")
-    void createDiary_invalidRequest() {
-        // given
-        // when
-        ApiBadRequestException exception =
-                assertThrows(ApiBadRequestException.class,
-                        () -> diaryService.createDiary(
-                                LocalDate.now(), "dd", ""));
-
-        // then
-        assertEquals(ErrorCode.INVALID_REQUEST, exception.getErrorCode());
+        assertDoesNotThrow(() ->
+                diaryService.createDiary(LocalDate.now(), "dd"));
     }
 
     @Test
@@ -85,7 +62,42 @@ class DiaryServiceTest {
 
         // when
         List<DiaryDto> diariesByDate =
-                diaryService.getDiariesByDate(LocalDate.now());
+                diaryService.getDiaries(LocalDate.now());
+
+        // then
+        assertEquals(2, diariesByDate.size());
+    }
+
+    @Test
+    @DisplayName("시작 날짜와 끝 날짜의 일기 조회")
+    void getDiariesBetween() {
+        // given
+        Diary diary = Diary.builder()
+                .id(1L)
+                .weather("Clear")
+                .temperature(293.14)
+                .text("오늘 날씨 일기")
+                .date(LocalDate.of(2023, Month.OCTOBER, 18))
+                .build();
+
+        Diary diary2 = Diary.builder()
+                .id(1L)
+                .weather("Clear")
+                .temperature(293.14)
+                .text("오늘 날씨 일기")
+                .date(LocalDate.of(2023, Month.OCTOBER, 23))
+                .build();
+        List<Diary> diaries = List.of(diary, diary2);
+
+        given(diaryRepository.findAllByDateBetween(any(), any()))
+                .willReturn(diaries);
+
+        // when
+        List<DiaryDto> diariesByDate =
+                diaryService.getDiariesBetween(
+                        LocalDate.of(2023, Month.OCTOBER, 18),
+                        LocalDate.of(2023, Month.OCTOBER, 23)
+                );
 
         // then
         assertEquals(2, diariesByDate.size());
@@ -95,65 +107,41 @@ class DiaryServiceTest {
     @DisplayName("일기 수정 성공")
     void updateDiary() {
         // given
-        given(diaryRepository.findById(any()))
+        given(diaryRepository.findFirstByDate(any()))
                 .willReturn(Optional.of(diary()));
 
         // when
-        DiaryDto diaryDto = diaryService.updateDiary(1L, "일기 수정");
-
         // then
-        assertEquals("일기 수정", diaryDto.getText());
+        assertDoesNotThrow(() ->
+                diaryService.updateDiary(LocalDate.now(), "일기 수정"));
     }
 
     @Test
     @DisplayName("해당 일기 없음 - 일기 수정 실패")
     void updateDiary_diaryNotFound() {
         // given
-        given(diaryRepository.findById(any()))
+        given(diaryRepository.findFirstByDate(any()))
                 .willReturn(Optional.empty());
 
         // when
         DiaryException exception = assertThrows(DiaryException.class,
-                () -> diaryService.updateDiary(1L, "일기 수정"));
+                () -> diaryService.updateDiary(LocalDate.now(),
+                        "일기 수정"));
 
         // then
         assertEquals(DIARY_NOT_FOUND, exception.getErrorCode());
     }
 
     @Test
-    @DisplayName("일기 삭제 성공")
+    @DisplayName("일기 삭제")
     void deleteDiary() {
         // given
-        given(diaryRepository.findById(any()))
-                .willReturn(Optional.of(diary()));
-
-        doNothing().when(diaryRepository).deleteById(anyLong());
-
-        ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
+        doNothing().when(diaryRepository).deleteAllByDate(any());
 
         // when
-        DiaryDto diaryDto = diaryService.deleteDiary(2L);
-
         // then
-        verify(diaryRepository, times(1))
-                .deleteById(captor.capture());
-        assertEquals(1L, captor.getValue());
-        assertEquals("Clear", diaryDto.getWeather());
-    }
-
-    @Test
-    @DisplayName("해당 일기 없음 - 일기 삭제 실패")
-    void deleteDiary_diaryNotFound() {
-        // given
-        given(diaryRepository.findById(any()))
-                .willReturn(Optional.empty());
-
-        // when
-        DiaryException exception = assertThrows(DiaryException.class,
-                () -> diaryService.deleteDiary(1L));
-
-        // then
-        assertEquals(DIARY_NOT_FOUND, exception.getErrorCode());
+        assertDoesNotThrow(() ->
+                diaryService.deleteDiary(LocalDate.now()));
     }
 
     private static Diary diary() {

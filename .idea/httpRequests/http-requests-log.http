@@ -1,0 +1,239 @@
+GET http://localhost:8080/read/diary?date=2023-10-18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-23T221307.200.json
+
+###
+
+PUT http://localhost:8080/update/diary?date=2023-10-18
+Content-Type: application/json
+Content-Length: 26
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+"text": "update diary"
+}
+
+###
+
+GET http://localhost:8080/read/diary?date=2023-10-18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-23T221225.200.json
+
+###
+
+POST http://localhost:8080/create/diary?date=2023-10-18
+Content-Type: application/json
+Content-Length: 27
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "text": "today diary"
+}
+
+###
+
+POST http://localhost:8080/diaries
+Content-Type: application/json
+Content-Length: 51
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "date": "2023-10-18",
+  "text": "today diary"
+}
+
+<> 2023-10-23T221053.404.json
+
+###
+
+GET http://localhost:8080/diaries?date=2023-10-18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-20T185119.200.json
+
+###
+
+GET http://localhost:8080/diaries?date=2023-10-20
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-20T184928.200.json
+
+###
+
+GET http://localhost:8080/diaries
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-20T184752.400.json
+
+###
+
+PATCH http://localhost:8080/diaries
+Content-Type: application/json
+Content-Length: 35
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+"id": 1,
+"text": "update diary"
+}
+
+<> 2023-10-20T184702.200.json
+
+###
+
+POST http://localhost:8080/diaries
+Content-Type: application/json
+Content-Length: 70
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "date": "2023-10-18",
+  "text": "today diary",
+  "city": "busan"
+}
+
+<> 2023-10-20T184644.200.json
+
+###
+
+POST http://localhost:8080/diaries
+Content-Type: application/json
+Content-Length: 65
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "date": "2023-10-18",
+  "text": "today diary",
+  "city": ""
+}
+
+<> 2023-10-20T184633.500.json
+
+###
+
+POST http://localhost:8080/diaries
+Content-Type: application/json
+Content-Length: 65
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "date": "2023-10-18",
+  "text": "today diary",
+  "city": ""
+}
+
+<> 2023-10-18T173801.500.json
+
+###
+
+POST http://localhost:8080/diaries
+Content-Type: application/json
+Content-Length: 65
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "date": "2023-10-18",
+  "text": "today diary",
+  "city": ""
+}
+
+<> 2023-10-18T172513.500.json
+
+###
+
+POST http://localhost:8080/diaries
+Content-Type: application/json
+Content-Length: 65
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "date": "2023-10-18",
+  "text": "today diary",
+  "city": ""
+}
+
+<> 2023-10-18T172057.500.json
+
+###
+
+POST http://localhost:8080/diaries
+Content-Type: application/json
+Content-Length: 70
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "date": "2023-10-18",
+  "text": "today diary",
+  "city": "busan"
+}
+
+<> 2023-10-18T171959.200.json
+
+###
+
+POST http://localhost:8080/diaries
+Content-Type: application/json
+Content-Length: 70
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "date": "2023-10-18",
+  "text": "today diary",
+  "city": "busan"
+}
+
+<> 2023-10-18T171748.200.json
+
+###
+
+POST http://localhost:8080/diaries
+Content-Type: application/json
+Content-Length: 70
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "date": "2023-10-18",
+  "text": "today diary",
+  "city": "busan"
+}
+
+<> 2023-10-18T171409.500.json
+
+###
+

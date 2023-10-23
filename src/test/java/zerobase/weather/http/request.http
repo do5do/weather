@@ -1,21 +1,18 @@
 ### create diary
-POST http://localhost:8080/diaries
+POST http://localhost:8080/create/diary?date=2023-10-18
 Content-Type: application/json
 
 {
-  "date": "2023-10-18",
-  "text": "today diary",
-  "city": "busan"
+  "text": "today diary"
 }
 
 ### get diaries
-GET http://localhost:8080/diaries?date=2023-10-18
+GET http://localhost:8080/read/diary?date=2023-10-18
 
 ### update diary
-PATCH http://localhost:8080/diaries
+PUT http://localhost:8080/update/diary?date=2023-10-18
 Content-Type: application/json
 
 {
-"id": 1,
-"text": "update diary"
+  "text": "update diary"
 }

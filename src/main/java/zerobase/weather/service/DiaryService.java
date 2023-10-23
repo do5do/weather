@@ -39,16 +39,14 @@ public class DiaryService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Transactional
-    public DiaryDto createDiary(LocalDate date, String text, String city) {
-        WeatherApiResponse weatherApiResponse = getWeather(city);
-        return DiaryDto.fromEntity(diaryRepository.save(Diary.of(
-                weatherApiResponse, text, date)));
+    public void createDiary(LocalDate date, String text) {
+        diaryRepository.save(Diary.of(getWeather(), text, date));
     }
 
-    private WeatherApiResponse getWeather(String city) {
+    private WeatherApiResponse getWeather() {
         String url = "https://api.openweathermap.org/data/2.5/weather";
         UriComponents uri = UriComponentsBuilder.fromHttpUrl(url)
-                .queryParam("q", city)
+                .queryParam("q", "seoul")
                 .queryParam("appid", key)
                 .build();
 
@@ -68,31 +66,29 @@ public class DiaryService {
         }
     }
 
-    public List<DiaryDto> getDiariesByDate(LocalDate date) {
+    public List<DiaryDto> getDiaries(LocalDate date) {
         return diaryRepository.findAllByDate(date).stream()
                 .map(DiaryDto::fromEntity)
                 .toList();
     }
 
-    @Transactional
-    public DiaryDto updateDiary(Long id, String text) {
-        // 강의에서는 동일 날짜의 다이어리 중 젤 첫번째 것으로 수정한다고 함,, 왤케 대충하지? 실전 맞냐...
-        Diary diary = getDiary(id);
+    public List<DiaryDto> getDiariesBetween(LocalDate startDate,
+                                            LocalDate endDate) {
+        return diaryRepository.findAllByDateBetween(startDate, endDate)
+                .stream()
+                .map(DiaryDto::fromEntity)
+                .toList();
+    }
 
+    @Transactional
+    public void updateDiary(LocalDate date, String text) {
+        Diary diary = diaryRepository.findFirstByDate(date).orElseThrow(
+                () -> new DiaryException(DIARY_NOT_FOUND));
         diary.updateDiary(text);
-        return DiaryDto.fromEntity(diary);
     }
 
     @Transactional
-    public DiaryDto deleteDiary(Long id) {
-        Diary diary = getDiary(id);
-        diaryRepository.deleteById(diary.getId());
-        return DiaryDto.fromEntity(diary);
-    }
-
-    private Diary getDiary(Long id) {
-        return diaryRepository.findById(id).orElseThrow(
-                () -> new DiaryException(DIARY_NOT_FOUND)
-        );
+    public void deleteDiary(LocalDate date) {
+        diaryRepository.deleteAllByDate(date);
     }
 }
