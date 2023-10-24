@@ -5,6 +5,162 @@ Accept-Encoding: br,deflate,gzip,x-gzip
 
 ###
 
+DELETE http://localhost:8080/delete/diary?date=2023-10-18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+PUT http://localhost:8080/update/diary?date=2023-10-18
+Content-Type: application/text
+Content-Length: 12
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+update diary
+
+<> 2023-10-24T212143.400.json
+
+###
+
+PUT http://localhost:8080/update/diary?date=2023-10-18
+Content-Type: application/text
+Content-Length: 12
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+update diary
+
+<> 2023-10-24T212034.400.json
+
+###
+
+DELETE http://localhost:8080/delete/diary?date=2023-10-18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+DELETE http://localhost:8080/delete/diary?date=2023-10-18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+DELETE http://localhost:8080/delete/diary?date=2023-10-18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+POST http://localhost:8080/create/diary?date=2023-10-18
+Content-Type: application/text
+Content-Length: 19
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "today diary"
+}
+
+###
+
+POST http://localhost:8080/create/diary?date=2023-10-18
+Content-Type: application/text
+Content-Length: 19
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "today diary"
+}
+
+###
+
+POST http://localhost:8080/create/diary?date=2023-10
+Content-Type: application/text
+Content-Length: 19
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "today diary"
+}
+
+<> 2023-10-24T211340.400.json
+
+###
+
+POST http://localhost:8080/create/diary?date=2023-10
+Content-Type: application/text
+Content-Length: 19
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "today diary"
+}
+
+<> 2023-10-24T211244.500.json
+
+###
+
+PUT http://localhost:8080/update/diary?date=2023-10-18
+Content-Type: application/text
+Content-Length: 20
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "update diary"
+}
+
+<> 2023-10-24T205755.400.json
+
+###
+
+GET http://localhost:8080/read/diary?date=2023-10-18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-24T205724.200.json
+
+###
+
+POST http://localhost:8080/create/diary?date=2023-10
+Content-Type: application/text
+Content-Length: 19
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "today diary"
+}
+
+<> 2023-10-24T205617.500.json
+
+###
+
+DELETE http://localhost:8080/delete/diary?date=2023-10-18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
 POST http://localhost:8080/create/diary?date=2023-10-18
 Content-Type: application/text
 Content-Length: 19

@@ -20,7 +20,6 @@ import zerobase.weather.dto.DiaryDto;
 import zerobase.weather.dto.WeatherApiResponse;
 import zerobase.weather.exception.ApiBadRequestException;
 import zerobase.weather.exception.DiaryException;
-import zerobase.weather.exception.ErrorCode;
 import zerobase.weather.repository.DateWeatherRepository;
 import zerobase.weather.repository.DiaryRepository;
 
@@ -28,7 +27,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-import static zerobase.weather.exception.ErrorCode.DIARY_NOT_FOUND;
+import static zerobase.weather.exception.ErrorCode.*;
 
 @Slf4j
 @Service
@@ -89,11 +88,12 @@ public class DiaryService {
                     WeatherApiResponse.class);
         } catch (HttpClientErrorException | IOException e) {
             log.error("API HttpClientErrorException is occurred. ", e);
-            throw new ApiBadRequestException(ErrorCode.INVALID_REQUEST);
+            throw new ApiBadRequestException(INVALID_REQUEST);
         }
     }
 
     public List<DiaryDto> getDiaries(LocalDate date) {
+        validateDate(date);
         return diaryRepository.findAllByDate(date).stream()
                 .map(DiaryDto::fromEntity)
                 .toList();
@@ -101,10 +101,19 @@ public class DiaryService {
 
     public List<DiaryDto> getDiariesBetween(LocalDate startDate,
                                             LocalDate endDate) {
+        validateDate(startDate);
+        validateDate(endDate);
         return diaryRepository.findAllByDateBetween(startDate, endDate)
                 .stream()
                 .map(DiaryDto::fromEntity)
                 .toList();
+    }
+
+    private static void validateDate(LocalDate date) {
+        if (date.isAfter(LocalDate.ofYearDay(3050, 1)) ||
+                date.isBefore(LocalDate.ofYearDay(1990, 1))) {
+            throw new DiaryException(INVALID_DATE);
+        }
     }
 
     @Transactional

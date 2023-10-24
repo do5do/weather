@@ -5,7 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
-import zerobase.weather.dto.WeatherApiResponse;
 
 import java.time.LocalDate;
 

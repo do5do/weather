@@ -26,6 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static zerobase.weather.exception.ErrorCode.DIARY_NOT_FOUND;
+import static zerobase.weather.exception.ErrorCode.INVALID_DATE;
 
 @ExtendWith(MockitoExtension.class)
 class DiaryServiceTest {
@@ -92,7 +93,7 @@ class DiaryServiceTest {
 
     @Test
     @DisplayName("해당 날짜의 일기 조회")
-    void getDiariesByDate() {
+    void getDiaries() {
         // given
         List<Diary> diaries = List.of(diary(), diary());
 
@@ -105,6 +106,34 @@ class DiaryServiceTest {
 
         // then
         assertEquals(2, diariesByDate.size());
+    }
+
+    @Test
+    @DisplayName("너무 먼 미래의 날짜 조회 - 일기 조회 실패")
+    void getDiaries_invalidDate() {
+        // given
+        LocalDate date = LocalDate.ofYearDay(3050, 2);
+
+        // when
+        DiaryException exception = assertThrows(DiaryException.class,
+                () -> diaryService.getDiaries(date));
+
+        // then
+        assertEquals(INVALID_DATE, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("너무 과거의 날짜 조회 - 일기 조회 실패")
+    void getDiaries_invalidDate_past() {
+        // given
+        LocalDate date = LocalDate.ofYearDay(1880, 1);
+
+        // when
+        DiaryException exception = assertThrows(DiaryException.class,
+                () -> diaryService.getDiaries(date));
+
+        // then
+        assertEquals(INVALID_DATE, exception.getErrorCode());
     }
 
     @Test
@@ -140,6 +169,21 @@ class DiaryServiceTest {
 
         // then
         assertEquals(2, diariesByDate.size());
+    }
+
+    @Test
+    @DisplayName("너무 먼 미래 또는 과거의 날짜 조회 - 시작 날짜와 끝 날짜의 일기 조회 실패")
+    void getDiariesBetween_invalidDate() {
+        // given
+        LocalDate startDate = LocalDate.ofYearDay(3080, 1);
+        LocalDate endDate = LocalDate.ofYearDay(1880, 1);
+
+        // when
+        DiaryException exception = assertThrows(DiaryException.class,
+                () -> diaryService.getDiariesBetween(startDate, endDate));
+
+        // then
+        assertEquals(INVALID_DATE, exception.getErrorCode());
     }
 
     @Test
