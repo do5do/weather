@@ -22,3 +22,7 @@ spring:
 logging:
   level:
     root: info
+    zerobase.weather: warn
+  config: classpath:logback-spring.xml
+
+

@@ -47,6 +47,7 @@ public class DiaryService {
     @Scheduled(cron = "0 0 1 * * *")
     public void saveDateWeather() {
         dateWeatherRepository.save(DateWeather.of(getWeather()));
+        log.info("Save DateWeather successful");
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
