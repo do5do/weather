@@ -37,6 +37,6 @@ public class GlobalExceptionHandler {
         log.error("Exception is occurred.", e);
         return ProblemDetail
                 .forStatusAndDetail(INTERNAL_SERVER_ERROR,
-                        ErrorCode.INTERNER_SERVER_ERROR.getDescription());
+                        ErrorCode.INTERNAL_SERVER_ERROR.getDescription());
     }
 }

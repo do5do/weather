@@ -19,6 +19,11 @@ spring:
   profiles:
     include: key
 
+  # swagger match
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 logging:
   level:
     root: info
