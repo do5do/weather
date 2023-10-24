@@ -1,33 +1,43 @@
 package zerobase.weather.service;
 
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.util.ReflectionTestUtils;
+import zerobase.weather.domain.DateWeather;
 import zerobase.weather.domain.Diary;
 import zerobase.weather.dto.DiaryDto;
 import zerobase.weather.exception.DiaryException;
+import zerobase.weather.repository.DateWeatherRepository;
 import zerobase.weather.repository.DiaryRepository;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.*;
 import static zerobase.weather.exception.ErrorCode.DIARY_NOT_FOUND;
 
 @ExtendWith(MockitoExtension.class)
 class DiaryServiceTest {
     @Mock
     DiaryRepository diaryRepository;
+
+    @Mock
+    @SpyBean
+    DateWeatherRepository dateWeatherRepository;
 
     @InjectMocks
     DiaryService diaryService;
@@ -39,9 +49,41 @@ class DiaryServiceTest {
     }
 
     @Test
-    @DisplayName("일기 생성 성공")
+    @DisplayName("dateWeather 저장")
+    void saveDateWeather() {
+        // given
+        given(dateWeatherRepository.save(any()))
+                .willReturn(dateWeather());
+
+        // when
+        // then
+        assertDoesNotThrow(() ->
+                diaryService.saveDateWeather());
+    }
+
+    @Test
+    @DisplayName("일기 생성 성공 - dateWeather가 있는 경우")
     void createDiary() {
         // given
+        given(dateWeatherRepository.findAllByDate(any()))
+                .willReturn(List.of(dateWeather()));
+
+        given(diaryRepository.save(any()))
+                .willReturn(diary());
+
+        // when
+        // then
+        assertDoesNotThrow(() ->
+                diaryService.createDiary(LocalDate.now(), "dd"));
+    }
+
+    @Test
+    @DisplayName("일기 생성 성공 - dateWeather가 없는 경우")
+    void createDiary_noDateWeather() {
+        // given
+        given(dateWeatherRepository.findAllByDate(any()))
+                .willReturn(List.of());
+
         given(diaryRepository.save(any()))
                 .willReturn(diary());
 
@@ -151,6 +193,14 @@ class DiaryServiceTest {
                 .temperature(293.14)
                 .text("오늘 날씨 일기")
                 .date(LocalDate.now())
+                .build();
+    }
+
+    private static DateWeather dateWeather() {
+        return DateWeather.builder()
+                .date(LocalDate.now())
+                .weather("Clear")
+                .temperature(293.14)
                 .build();
     }
 }
