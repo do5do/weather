@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
     <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
 
-    <property name="LOGS_PATH" value="./logs"/>
-    <property name="LOGS_LEVEL" value="INFO"/>
-    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <property name="LOG_PATH" value="./logs"/>
+    <property name="LOG_LEVEL" value="INFO"/>
+    <property name="LOG_FILE" value="weather"/>
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
     <property name="LOG_PATTERN"
               value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%logger{36}] - %msg%n"/>
 
@@ -16,13 +19,13 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOGS_PATH}/weather.log</file>
+        <file>${LOG_PATH}/${LOG_FILE}.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${LOG_PATTERN}</pattern>
             <charset>UTF-8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_FILE}-%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM, aux}/${LOG_FILE}-%d{yyyy-MM-dd}_%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -31,13 +34,13 @@
     </appender>
 
     <appender name="Error" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOGS_PATH}/weather-error.log</file>
+        <file>${LOG_PATH}/${LOG_FILE}-error.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${LOG_PATTERN}</pattern>
             <charset>UTF-8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>weather-error-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE}-error-%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -45,7 +48,7 @@
         </filter>
     </appender>
 
-    <root level="${LOGS_LEVEL}">
+    <root level="${LOG_LEVEL}">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
         <appender-ref ref="Error"/>
