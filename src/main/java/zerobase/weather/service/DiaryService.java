@@ -41,6 +41,7 @@ public class DiaryService {
     private String key;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
+    private static final String URL = "https://api.openweathermap.org/data/2.5/weather";
 
     @Transactional
     @Scheduled(cron = "0 0 1 * * *")
@@ -66,8 +67,7 @@ public class DiaryService {
     }
 
     private WeatherApiResponse getWeather() {
-        String url = "https://api.openweathermap.org/data/2.5/weather";
-        UriComponents uri = UriComponentsBuilder.fromHttpUrl(url)
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(URL)
                 .queryParam("q", "seoul")
                 .queryParam("appid", key)
                 .build();
