@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@EnableJpaAuditing // 따로 설정을 빼둔 이유는 run application에 있으면 mock 객체 생성 시 실패함
+@EnableJpaAuditing
 public class BaseTimeEntity {
     @CreatedDate
     LocalDateTime createdDate;
