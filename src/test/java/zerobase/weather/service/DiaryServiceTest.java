@@ -6,11 +6,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import zerobase.weather.domain.DateWeather;
 import zerobase.weather.domain.Diary;
 import zerobase.weather.dto.DiaryDto;
+import zerobase.weather.dto.WeatherApiResponse;
 import zerobase.weather.exception.DiaryException;
+import zerobase.weather.openapi.WeatherScrapper;
 import zerobase.weather.repository.DateWeatherRepository;
 import zerobase.weather.repository.DiaryRepository;
 
@@ -32,8 +33,10 @@ class DiaryServiceTest {
     DiaryRepository diaryRepository;
 
     @Mock
-    @SpyBean
     DateWeatherRepository dateWeatherRepository;
+
+    @Mock
+    WeatherScrapper weatherScrapper;
 
     @InjectMocks
     DiaryService diaryService;
@@ -44,12 +47,21 @@ class DiaryServiceTest {
 //                "dd894f938bc590a12be5ca2f0fced472");
 //    }
 
+    private static WeatherApiResponse weatherResponse() {
+        return new WeatherApiResponse(List.of(
+                new WeatherApiResponse.Weather("Clear", "")),
+                new WeatherApiResponse.Main(293.14));
+    }
+
     @Test
     @DisplayName("일기 생성 성공 - dateWeather가 있는 경우")
     void createDiary() {
         // given
-        given(dateWeatherRepository.findAllByDate(any()))
-                .willReturn(List.of(dateWeather()));
+        given(weatherScrapper.getWeather())
+                .willReturn(weatherResponse());
+
+        given(dateWeatherRepository.findByDate(any()))
+                .willReturn(Optional.of(dateWeather()));
 
         given(diaryRepository.save(any()))
                 .willReturn(diary());
@@ -64,8 +76,11 @@ class DiaryServiceTest {
     @DisplayName("일기 생성 성공 - dateWeather가 없는 경우")
     void createDiary_noDateWeather() {
         // given
-        given(dateWeatherRepository.findAllByDate(any()))
-                .willReturn(List.of());
+        given(weatherScrapper.getWeather())
+                .willReturn(weatherResponse());
+
+        given(dateWeatherRepository.findByDate(any()))
+                .willReturn(Optional.empty());
 
         given(diaryRepository.save(any()))
                 .willReturn(diary());

@@ -19,12 +19,12 @@ public class DateWeather extends BaseTimeEntity {
     private String icon;
     private Double temperature;
 
-    public static DateWeather of(WeatherApiResponse weather) {
+    public static DateWeather of(WeatherApiResponse weatherResponse) {
         return DateWeather.builder()
                 .date(LocalDate.now())
-                .weather(weather.getWeather().weather())
-                .icon(weather.getWeather().icon())
-                .temperature(weather.main().temperature())
+                .weather(weatherResponse.getWeather().weather())
+                .icon(weatherResponse.getWeather().icon())
+                .temperature(weatherResponse.main().temperature())
                 .build();
     }
 }

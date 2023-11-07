@@ -27,6 +27,8 @@ public class DiaryService {
     private final WeatherScrapper weatherScrapper;
     private final DiaryRepository diaryRepository;
     private final DateWeatherRepository dateWeatherRepository;
+    private static final LocalDate MAX_DATE = LocalDate.ofYearDay(3050, 1);
+    private static final LocalDate MIN_DATE = LocalDate.ofYearDay(1990, 1);
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void createDiary(LocalDate date, String text) {
@@ -34,14 +36,8 @@ public class DiaryService {
     }
 
     private DateWeather getDateWeather(LocalDate date) {
-        List<DateWeather> findDateWeathers =
-                dateWeatherRepository.findAllByDate(date);
-
-        if (findDateWeathers.isEmpty()) { // 현재 날씨 가져오기
-            return DateWeather.of(weatherScrapper.getWeather());
-        }
-
-        return findDateWeathers.get(0);
+        return dateWeatherRepository.findByDate(date)
+                .orElse(DateWeather.of(weatherScrapper.getWeather()));
     }
 
     public List<DiaryDto> getDiaries(LocalDate date) {
@@ -53,18 +49,18 @@ public class DiaryService {
 
     public List<DiaryDto> getDiariesBetween(LocalDate startDate,
                                             LocalDate endDate) {
-        validateDate(startDate);
-        validateDate(endDate);
+        validateDate(startDate, endDate);
         return diaryRepository.findAllByDateBetween(startDate, endDate)
                 .stream()
                 .map(DiaryDto::fromEntity)
                 .toList();
     }
 
-    private static void validateDate(LocalDate date) {
-        if (date.isAfter(LocalDate.ofYearDay(3050, 1)) ||
-                date.isBefore(LocalDate.ofYearDay(1990, 1))) {
-            throw new DiaryException(INVALID_DATE);
+    private static void validateDate(LocalDate... dates) {
+        for (LocalDate date : dates) {
+            if (date.isAfter(MAX_DATE) || date.isBefore(MIN_DATE)) {
+                throw new DiaryException(INVALID_DATE);
+            }
         }
     }
 
