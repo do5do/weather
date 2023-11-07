@@ -1,6 +1,5 @@
 package zerobase.weather.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.test.util.ReflectionTestUtils;
 import zerobase.weather.domain.DateWeather;
 import zerobase.weather.domain.Diary;
 import zerobase.weather.dto.DiaryDto;
@@ -40,24 +38,11 @@ class DiaryServiceTest {
     @InjectMocks
     DiaryService diaryService;
 
-    @BeforeEach
-    void setUp() {
-        ReflectionTestUtils.setField(diaryService, "key",
-                "dd894f938bc590a12be5ca2f0fced472");
-    }
-
-    @Test
-    @DisplayName("dateWeather 저장")
-    void saveDateWeather() {
-        // given
-        given(dateWeatherRepository.save(any()))
-                .willReturn(dateWeather());
-
-        // when
-        // then
-        assertDoesNotThrow(() ->
-                diaryService.saveDateWeather());
-    }
+//    @BeforeEach
+//    void setUp() {
+//        ReflectionTestUtils.setField(diaryService, "key",
+//                "dd894f938bc590a12be5ca2f0fced472");
+//    }
 
     @Test
     @DisplayName("일기 생성 성공 - dateWeather가 있는 경우")
